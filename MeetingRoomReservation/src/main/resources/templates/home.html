@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>회의실 예약</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.13.4/bootstrap-table.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.13.4/bootstrap-table.js"></script>
+
+
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                회의실 예약
+                <small>안재홍</small>
+            </h1>
+            <ol class="breadcrumb">
+                <label for="roomNameId">회의실</label>
+                <li>
+                    <select th:field="*{rooms}" id="roomNameId" class="form-control">
+                        <option value=""> --</option>
+                        <option th:each="reservationTimeTable : ${rooms}"
+                                th:value="${reservationTimeTable.id}"
+                                th:utext="${reservationTimeTable.roomName}"/>
+                    </select>
+                </li>
+                <div class='form-group col-sm-4'>
+                    <div class='input-group date' id='calendar'>
+                        <input type='text' class="form-control" placeholder="YYYY.MM.DD" id="reservationDate"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <button id="reservationSelectButton" type="submit" class="btn btn-primary">조회</button>
+            </ol>
+        </section>
+
+        <section class="content-body">
+            <div class='form-group'>
+                <div class="col-xs-2">
+                    <label for="reservationName">예약명</label>
+                    <input type='text' class="form-control" placeholder="예약명" id="reservationName"/>
+                </div>
+            </div>
+            <div class='form-group'>
+                <div class="col-xs-2">
+                    <input type="checkbox" id="weekCheckBox"> 주 단위로 예약
+                    <input type="number" class="form-control" id="weekCount" value="0" min="0" max="10" disabled>
+                    <button id="reservationSaveButton" type="submit" class="btn btn-warning">저장</button>
+                </div>
+            </div>
+            <div class='col-sm-6'>
+                <table class="table" id="reservationTable">
+                    <thead>
+                    <tr>
+                        <th scope="col" data-field="startTime">시간</th>
+                        <th scope="col" data-field="reservationName">예약명</th>
+                        <th scope="col" data-field="isReserved">예약하기</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(function () {
+            $('#calendar').datepicker({
+                format: 'yyyy.mm.dd',
+                startDate: '0',
+                endDate: '+365d',
+                todayHighlight: true
+            });
+            $('#calendar').datepicker('setDate', 'today');
+        });
+
+        $('#reservationSelectButton').click(function(){
+            getReservationList();
+        });
+
+        $('#reservationSaveButton').click(function(){
+            var reservationName = $("#reservationName").val();
+            if(reservationName == "") {
+                alert('예약명을 입력해주세요');
+                $("#reservationName").focus();
+                return false;
+            }
+
+            var startTimeStr = '';
+            $('#reservationTable > tbody > tr').each(function() {
+                if ($(this).find('.reservationCheckbox').is(":checked") == true){
+                    startTimeStr += ($(this).find('#startTime').val());
+                    startTimeStr += ',';
+                }
+            });
+
+            if (startTimeStr == '') {
+                alert('예약할 시간을 선택해주세요');
+                return false;
+            }
+
+            if (startTimeStr.charAt(startTimeStr.length-1) == ','){
+                startTimeStr = startTimeStr.slice(0, -1);
+            }
+
+            var url = '/api/reservation/save';
+            var weekCount = $('#weekCount').val();
+            var roomId = $("#roomNameId option:selected").val();
+            var reservationDate = $('#reservationDate').val();
+
+            var data = {
+                roomId: roomId,
+                reservationName: reservationName,
+                reservationDate: reservationDate,
+                startTime: startTimeStr,
+                weekCount: weekCount,
+            }
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result, status, xhr) {
+                    alert('예약되었습니다');
+                    getReservationList();
+                    console.log(result);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert('Error' + errorMessage);
+                    console.log('Error' + errorMessage);
+                }
+            });
+        });
+
+        function getReservationList(){
+            var roomId = $("#roomNameId option:selected").val();
+            if(roomId == "") {
+                alert('회의실을 선택해주세요');
+                return false;
+            }
+            var url = '/api/reservation/' + roomId + '/lists';
+
+            $.ajax(url, {
+                type: 'GET',
+                data: { reservationDate: $('#reservationDate').val() },
+                success: function (result, status, xhr) {
+                    $('#reservationTable tbody').empty();
+                    $.each(result, function(i, reservation){
+
+					var reservationRow = '<tr>' +
+										'<td>' + reservation.startTime + ' ~ ' + reservation.endTime + '</td>' +
+										'<td class=reservationName>' + reservation.reservationName + '</td>' +
+										'<td class=isReserved data-isreserved=' + reservation.isReserved + '> </td>' +
+										'<input type="hidden" id="startTime" value="' + reservation.startTime + '">' +
+									    '</tr>';
+
+					$('#reservationTable tbody').append(reservationRow);
+		        });
+
+		        $('#reservationTable > tbody > tr').each(function() {
+		            if ($(this).find('.reservationName').text() == 'null') {
+                        $(this).find('.reservationName').text('');
+                    }
+
+                    if (!$(this).find('.isReserved').data("isreserved")) {
+                        $(this).addClass("info");
+                        $(this).find('.isReserved').append('<input type="checkbox" class="reservationCheckbox">');
+                    } else {
+                        $(this).addClass("danger");
+                    }
+		        });
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert('Error' + errorMessage);
+                    console.log('Error' + errorMessage);
+                }
+            });
+        }
+
+        $("#weekCheckBox").change(function(){
+            if($("#weekCheckBox").is(":checked")){
+                $('#weekCount').attr('disabled', false);
+            }else{
+                $('#weekCount').attr('disabled', true);
+                $('#weekCount').val(0);
+            }
+        });
+
+    </script>
+</th:block>
+</html>
