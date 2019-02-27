@@ -36,9 +36,9 @@ http://localhost:8080/console
 == 동작방식 ==
 1. Springboot Application 실행 시에 회의실과 1년치의 예약 테이블을 생성한다.
 2. 웹 브라우저와 WAS와의 통신 방식은 HTTP 통신을 지원한다. (REST API)
-조회, 등록 요청 시에 User -> Contoller -> Service -> Repository -> Database 형태로 요청된다. (Spring MVC)
-3. 동시성 처리는 @Version을 통해 제공한다. Optimistic Lock을 통해 한 트랜잭션이 먼저 커밋이 되었을 시에, 두번째 커밋은 충돌을 감지하고 롤백을 한다.
-4. DB로부터 읽어온 데이터는 Thymeleaf를 통해 정적인 HTML 문서에 동적인 데이터를 넣어준다. (WAS)
+3. 조회, 등록 요청 시에 User -> Contoller -> Service -> Repository -> Database 형태로 요청된다. (Spring MVC)
+4. 동시성 처리는 @Version을 통해 제공한다. Optimistic Lock을 통해 한 트랜잭션이 먼저 커밋이 되었을 시에, 두번째 커밋은 충돌을 감지하고 롤백을 한다.
+5. DB로부터 읽어온 데이터는 Thymeleaf를 통해 정적인 HTML 문서에 동적인 데이터를 넣어준다. (WAS)
 
 == 고려사항 ==
 1. 회의실은 확장성을 고려하여 테이블을 분리하였고 예약 테이블과 연관을 맺어주었다.
