@@ -14,7 +14,7 @@ public class ReservationController {
     private RoomBiz roomBiz;
 
     @GetMapping("/home")
-    public ModelAndView home(Model model) {
+    public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("rooms", roomBiz.getAllRoomList());
         modelAndView.setViewName("/home.html");

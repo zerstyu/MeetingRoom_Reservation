@@ -50,14 +50,4 @@ public class ReservationTable {
         this.createdTime = new Date();
         this.updatedTime = new Date();
     }
-
-    public ReservationTable(String reservationName, String date, String startTime, String endTime) {
-        this.reservationName = reservationName;
-        this.isReserved = false;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.createdTime = new Date();
-        this.updatedTime = new Date();
-    }
 }
