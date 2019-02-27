@@ -19,6 +19,7 @@
 - Junit
 
 == 프로젝트 빌드, 실행 방법 ==
+
 Springboot 환경에서 동작하는 프로젝트이며, Application.java에서 Application을 실행하면 동작한다.
 - Front Page
 http://localhost:8080/home
@@ -43,8 +44,7 @@ http://localhost:8080/console
 1. 회의실은 확장성을 고려하여 테이블을 분리하였고 예약 테이블과 연관을 맺어주었다.
 2. Index는 현재 추가해두지 않았지만  (RoomId, Date), (RoomId, Date, StartTime)를 추가하면 성능에 도움이 될 것이다.
 3. 만약 지금보다 훨씬 많은 회의실이 생성된다면 이 방식이 효과적일까?
-
-A) 현재의 방식이라면 1달 분의 경우 24 x 2 x Room 개수 x 30개의 데이터가 생성이 된다. 
+ => A) 현재의 방식이라면 1달 분의 경우 24 x 2 x Room 개수 x 30개의 데이터가 생성이 된다. 
 어차피 회의실은 정적으로 한 번 생성해두면 되기에 개수는 큰 부담이 되지 않는다고 생각하지만, 조회 시 데이터가 굉장히 많아질 수 있기에 필요에 따라 1주일, 1달치의 데이터는 NoSQL 저장소나 DB를 분리하여 성능 향상을 기대할 수 있다.
 NoSQL을 사용한다면 다양한 조회를 할 수 있도록 Elastic Search로 구현하여 지원할 것이다.
 RDBMS를 사용한다면 Master-Slave 구조로 Replication해서 Master DB에 부담을 줄이고 Slave에서 조회 성능을 향상할 것이다.
