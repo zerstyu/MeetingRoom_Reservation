@@ -35,17 +35,23 @@ public class RoomBizImplTest {
 
     private List<Room> getRoomList() {
         List<Room> roomList = Lists.newArrayList();
-        Room room = new Room("A");
+        Room room = new Room();
+        room.setRoomName("A");
         roomList.add(room);
-        Room room1 = new Room("B");
+        Room room1 = new Room();
+        room1.setRoomName("B");
         roomList.add(room1);
-        Room room2 = new Room("C");
+        Room room2 = new Room();
+        room2.setRoomName("C");
         roomList.add(room2);
-        Room room3 = new Room("D");
+        Room room3 = new Room();
+        room3.setRoomName("D");
         roomList.add(room3);
-        Room room4 = new Room("E");
+        Room room4 = new Room();
+        room4.setRoomName("E");
         roomList.add(room4);
-        Room room5 = new Room("F");
+        Room room5 = new Room();
+        room5.setRoomName("F");
         roomList.add(room5);
         return roomList;
     }

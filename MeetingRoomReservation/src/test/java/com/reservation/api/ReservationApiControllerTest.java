@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -154,51 +153,49 @@ public class ReservationApiControllerTest {
 
     private ReservationDto getReservationDto() {
         ReservationDto reservationDto = new ReservationDto();
-        reservationDto.roomId = "1";
-        reservationDto.reservationName = "test";
-        reservationDto.reservationDate = "2019.03.31";
-        reservationDto.startTime = "00:00";
-        reservationDto.weekCount = 1;
+        reservationDto.setReservationName("test");
+        reservationDto.setReservationDate("2019.03.31");
+        reservationDto.setStartTime("00:00");
+        reservationDto.setWeekCount(1);
         return reservationDto;
     }
 
     private Room getRoom() {
         Room room = new Room();
-        room.id = 1L;
-        room.roomName = "TESTROOM";
-        room.createdTime = new Date();
-        room.updatedTime = new Date();
+        room.setRoomName("TESTROOM");
         return room;
     }
 
     private ReservationTable getReservationTable() {
         ReservationTable reservationTable = new ReservationTable();
-        reservationTable.id = 1L;
-        reservationTable.version = 0L;
-        reservationTable.reservationName = "TEST";
-        reservationTable.isReserved = false;
-        reservationTable.date = "2019.03.31";
-        reservationTable.startTime = "00:00";
-        reservationTable.endTime = "00:30";
-        reservationTable.createdTime = new Date();
-        reservationTable.updatedTime = new Date();
-        reservationTable.room = getRoom();
+        reservationTable.setReservationName("TEST");
+        reservationTable.setReserved(false);
+        reservationTable.setDate("2019.03.31");
+        reservationTable.setStartTime("00:00");
+        reservationTable.setEndTime("00:30");
+        reservationTable.setRoom(getRoom());
         return reservationTable;
     }
 
     private List<Room> getRoomList() {
         List<Room> roomList = Lists.newArrayList();
-        Room room = new Room("A");
+        Room room = new Room();
+        room.setRoomName("A");
         roomList.add(room);
-        Room room1 = new Room("B");
+        Room room1 = new Room();
+        room1.setRoomName("B");
         roomList.add(room1);
-        Room room2 = new Room("C");
+        Room room2 = new Room();
+        room2.setRoomName("C");
         roomList.add(room2);
-        Room room3 = new Room("D");
+        Room room3 = new Room();
+        room3.setRoomName("D");
         roomList.add(room3);
-        Room room4 = new Room("E");
+        Room room4 = new Room();
+        room4.setRoomName("E");
         roomList.add(room4);
-        Room room5 = new Room("F");
+        Room room5 = new Room();
+        room5.setRoomName("F");
         roomList.add(room5);
         return roomList;
     }
@@ -226,10 +223,10 @@ public class ReservationApiControllerTest {
                 int startDate = cal.get(Calendar.DATE);
                 while (cal.get(Calendar.DATE) == startDate) {
                     ReservationTable reservationTable = new ReservationTable();
-                    reservationTable.room = room;
-                    reservationTable.date = df2.format(cal2.getTime());
-                    reservationTable.startTime = df.format(cal.getTime());
-                    reservationTable.endTime = df.format(cal1.getTime());
+                    reservationTable.setRoom(room);
+                    reservationTable.setDate(df2.format(cal2.getTime()));
+                    reservationTable.setStartTime(df.format(cal.getTime()));
+                    reservationTable.setEndTime(df.format(cal1.getTime()));
                     cal.add(Calendar.MINUTE, 30);
                     cal1.add(Calendar.MINUTE, 30);
                     reservationTableList.add(reservationTable);

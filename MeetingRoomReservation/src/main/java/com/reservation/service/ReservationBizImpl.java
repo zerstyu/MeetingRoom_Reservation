@@ -38,15 +38,14 @@ public class ReservationBizImpl implements ReservationBiz {
 
     @Override
     public List<ReservationTable> saveAllReservation(ReservationDto reservationDto) throws Exception {
-        List<String> dateList = getDateList(reservationDto.reservationDate, reservationDto.weekCount);
-        List<String> startTimeList = Lists.newArrayList(reservationDto.startTime.split(","));
+        List<String> dateList = getDateList(reservationDto.getReservationDate(), reservationDto.getWeekCount());
+        List<String> startTimeList = Lists.newArrayList(reservationDto.getStartTime().split(","));
         List<ReservationTable> reservationTableList = reservationRepository.findByRoomIdAndDateInAndStartTimeIn(
-                Long.valueOf(reservationDto.roomId), dateList, startTimeList);
+                Long.valueOf(reservationDto.getRoomId()), dateList, startTimeList);
 
         for (ReservationTable reservation : reservationTableList) {
-            reservation.reservationName = reservationDto.reservationName;
-            reservation.isReserved = true;
-            reservation.updatedTime = new Date();
+            reservation.setReservationName(reservationDto.getReservationName());
+            reservation.setReserved(true);
             reservationRepository.save(reservation);
         }
         return reservationTableList;

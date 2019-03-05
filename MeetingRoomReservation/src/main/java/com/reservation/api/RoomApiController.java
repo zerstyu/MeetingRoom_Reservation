@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/reservationTimeTable")
 public class RoomApiController {
 
-    public static final Logger logger = LoggerFactory.getLogger(ReservationApiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReservationApiController.class);
 
     @Autowired
     private RoomBiz roomBiz;

@@ -1,6 +1,6 @@
 package com.reservation.util;
 
-public class BizException extends Exception {
+public class BizException extends RuntimeException {
 
     private String errorMessage;
 
