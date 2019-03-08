@@ -10,11 +10,6 @@ import javax.persistence.*;
 @Table(name = "RESERVATION_TABLE")
 @Data
 public class ReservationTable extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "RESERVATION_ID")
-    private Long id;
-
     @Version
     @Column(name = "VERSION", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
